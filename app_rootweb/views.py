@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
+from rest_framework import routers, serializers, viewsets
 from rest_framework import generics, filters, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -11,6 +12,8 @@ from rest_framework import status
 
 import json
 import pandas as pd
+
+from django.contrib.auth.models import User
 
 # Create your views here.
 class ApiRoot(generics.GenericAPIView):
@@ -60,3 +63,13 @@ class Coba(APIView):
 
 
 
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'is_staff']
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

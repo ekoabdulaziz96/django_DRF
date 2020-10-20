@@ -19,38 +19,48 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
 # from backend import views as views_backend
 from . import views as views_root
 
-
-# Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-# Routers provide an easy way of automatically determining the URL conf.
+from app_blog.urls import router as appBlogRouter
+from app_snippet.urls import router as appSnippetRouter
+#Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(r'users', views_root.UserViewSet)
+router.registry.extend(appBlogRouter.registry)
+router.registry.extend(appSnippetRouter.registry)
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'blog': reverse('ab:api', request=request, format=format),
+        'snippets': reverse('as:api', request=request, format=format),
+    })
+
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('backend/', include('backend.urls', namespace='be')),
+    # -----------------------------------------------------------app
+    path('app-blog/', include('app_blog.urls', namespace='ab')),
+    path('app-snippet/', include('app_snippet.urls', namespace='as')),
     
     # path('', views.index),
     # path('', views_root.ApiRoot.as_view(), name=views_root.ApiRoot.name),
     # path('ini-api/',views_root.ini_api, name='ini-api'),
     # path('coba/',views_root.Coba.as_view(), name='nyobo'),
 
-    path('', include(router.urls)),
+    # ----- api root -> url pattern
+    path('', api_root), 
+    
+    # ----- api root -> routing
+    path('routing/', include(router.urls), name='router'),
+
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 
 ]

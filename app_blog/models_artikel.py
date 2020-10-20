@@ -11,7 +11,7 @@ class Artikel(models.Model):
 
     def save(self, **kwargs):
         self.slug = slugify(self.title)
-        super(Role, self).save()
+        super(Artikel, self).save()
 
     def __str__(self):
         return "[{}] Artikel berjudul {}".format(self.id,self.title)
