@@ -47,7 +47,7 @@ def api_root(request, format=None):
 urlpatterns = [
     path('admin/', admin.site.urls),
     # -----------------------------------------------------------app
-    path('app-blog/', include('app_blog.urls', namespace='ab')),
+    # path('app-blog/', include('app_blog.urls', namespace='ab')), # sudah di handle routing
     path('app-snippet/', include('app_snippet.urls', namespace='as')),
     
     # path('', views.index),
@@ -55,10 +55,10 @@ urlpatterns = [
     # path('ini-api/',views_root.ini_api, name='ini-api'),
     # path('coba/',views_root.Coba.as_view(), name='nyobo'),
 
-    # ----- api root -> url pattern
+    #*** ----- api root -> url pattern 
     path('', api_root), 
     
-    # ----- api root -> routing
+    #*** ----- api root -> routing
     path('routing/', include(router.urls), name='router'),
 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))

@@ -13,4 +13,4 @@ class ArtikelViewSet(viewsets.ModelViewSet):
     """
     queryset = ArtikelModel.objects.all().order_by('-title')
     serializer_class = ArtikelSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]

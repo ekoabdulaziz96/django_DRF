@@ -7,10 +7,12 @@ from rest_framework.reverse import reverse
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import views_artikel
+from . import views
 app_name = 'app_blog'
 
 router = routers.DefaultRouter()
 router.register(r'artikel', views_artikel.ArtikelViewSet)
+router.register(r'todo', views.TodoViewSet)
 
 @api_view(['GET'])
 def api_blog(request, format=None):
